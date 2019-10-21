@@ -1,6 +1,6 @@
-# Maze
+# Maze 2d Life
 Maze Game in C++
-2d Life
+
 
 Components:
 
