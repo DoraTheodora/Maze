@@ -129,7 +129,7 @@ void changePlants(int numRows, int numCols, char maze[10][10])
 }
 void moveWalkers(int numRows, int numCols, char maze[10][10])
 {
-	bool placesAvaialable = false;
+	bool placesAvaialable;
 	srand(time(NULL));
 
 	for (int i = 0; i < numRows; i++)
@@ -138,10 +138,76 @@ void moveWalkers(int numRows, int numCols, char maze[10][10])
 		{
 			if (maze[i][j] == '2')
 			{
-				//maze[i][j] = '3';
+				//maze[i][j] = '3'; // found them
+				//check for avaialable places arround where the walker is
+				placesAvaialable = false;
+				for (int minRow = i - 1; minRow <= i + 1; minRow++)
+				{
+					for (int minCol = j - 1; minCol <= j + 1; minCol++)
+					{
+						if (maze[minRow][minCol] != '*' && maze[minRow][minCol] != '2')
+						{
+							placesAvaialable = true;
+							break;
+						}
+					}
+
+				}
+				// generate random free space to move the walter
+				if (placesAvaialable)
+				{
+					//std::cout << i << " " << j << std::endl;
+					
+					int randRow = rand() % 3 - 1;
+					int randCol = rand() % 3 - 1;
+					bool moving = true;
+					while (moving)
+					{
+						//std::cout << "Entering while (moving)" << std::endl;
+						if (maze[i+randRow][j+randCol] == ' ' || (maze[i + randRow][j + randCol] >= 'A' && maze[i + randRow][j + randCol] <= 'Y'))
+						{
+							maze[i+randRow][j+randCol] = '3'; // change walker symbol to don't try it again
+							maze[i][j] = ' ';
+							moving = false;
+							break;
+						}
+						else
+						{
+							randRow = rand() % 3 - 1;
+							randCol = rand() % 3 - 1;
+						} 
+					} 
+					//std::cout << "--------------------------------Leaving while (moving)" << std::endl;
+				}
 			}
 		}
 	}
+	// cheange all the players back to their original symbol
+	for (int i = 0; i < numRows; i++)
+	{
+		for (int j = 0; j < numCols; j++)
+		{
+			if (maze[i][j] == '3')
+			{
+				maze[i][j] = '2';
+			}
+		}
+	}
+}
+bool checkWin(int numRows, int numCols, char maze[10][10])
+{
+	int count = 0;
+	for (int i = 0; i < numRows; i++)
+	{
+		for (int j = 0; j < numCols; j++)
+		{
+			if (maze[i][j] >= 'A' && maze[i][j] <= 'Y')
+			{
+				count++;
+			}
+		}
+	}
+	return(count == 0);
 }
 int main()
 {
@@ -150,25 +216,25 @@ int main()
 	const int numCols = 10;
 	char  maze[numRows][numCols] = {{'*','*','*','*','*','*','*','*','*','*'},
 									{'*',' ',' ',' ',' ',' ',' ',' ',' ','*'},
-									{'*','*',' ','*','*','*',' ','*',' ','*'},
-									{'*','*',' ','*','*','*',' ','*',' ','*'},
-									{'*','*',' ','*','*','*',' ','*',' ','*'},
+									{'*',' ','*','*','*','*',' ','*',' ','*'},
+									{'*',' ',' ',' ','*',' ',' ','*',' ','*'},
+									{'*',' ',' ','*','*','*',' ','*',' ','*'},
 									{'*','*',' ',' ',' ','*',' ','*','*','*'},
-									{'*','*',' ','*',' ','*',' ','*','*','*'},
-									{'*','*',' ','*','*','*',' ',' ','*','*'},
-									{'*','*',' ',' ',' ','*','*',' ','*','*'},
+									{'*',' ',' ','*',' ','*',' ','*',' ','*'},
+									{'*','*',' ','*','*','*',' ','*','*','*'},
+									{'*',' ',' ',' ',' ','*',' ',' ',' ','*'},
 									{'*','*','*','*','*','*','*','*','*','*'} };
-	char c = 'a';
+	char c = ' ';
 	bool postWalkersPlants = true;
 	/////////////////// WALKERS
 	int numOfWalkers = rand() % 10 + 2;
 	/////////////////// END WALKERS
 
 	/////////////////// PLANTS
+
 	char namePlant = rand() % 23 + 65;
 	int numOfPlants = rand() % 10 + 2;
 	////////////// END PLANTS
-
 
 	while (c != 'x')
 	{
@@ -182,9 +248,15 @@ int main()
 
 		system("CLS"); // clear screen
 		drawMaze(maze, numRows, numCols);
-		cin >> c;
+		//cin >> c;
+		std::cout << "\nPress the RETURN key to continue OR 'x' to exit!" << std::endl;
+		c = getchar();
+		if (checkWin(numRows, numCols, maze))
+		{
+			std::cout << "No more plants! You Won!" << std::endl;
+			break;
+		}
 		changePlants(numRows, numCols, maze);
 		moveWalkers(numRows, numCols, maze);
-	}
-		
+	}	
 }
