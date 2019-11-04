@@ -17,7 +17,6 @@ void drawMaze(char maze[10][10], int numRows, int numCols)
 }
 void placeWalkers(char maze[10][10], int walkers)
 {
-	srand(time(NULL));
 	int w = 0;
 	while(w < walkers)
 	{
@@ -32,7 +31,6 @@ void placeWalkers(char maze[10][10], int walkers)
 }
 void placePlants(char maze[10][10], int plants, char namePlant)
 {
-	srand(time(NULL));
 	int p = 0;
 	while(p < plants)
 	{
@@ -130,7 +128,6 @@ void changePlants(int numRows, int numCols, char maze[10][10])
 void moveWalkers(int numRows, int numCols, char maze[10][10])
 {
 	bool placesAvaialable;
-	srand(time(NULL));
 
 	for (int i = 0; i < numRows; i++)
 	{
@@ -221,7 +218,7 @@ int main()
 									{'*',' ',' ','*','*','*',' ','*',' ','*'},
 									{'*','*',' ',' ',' ','*',' ','*','*','*'},
 									{'*',' ',' ','*',' ','*',' ','*',' ','*'},
-									{'*','*',' ','*','*','*',' ','*','*','*'},
+									{'*','*',' ','*','*','*',' ','*',' ','*'},
 									{'*',' ',' ',' ',' ','*',' ',' ',' ','*'},
 									{'*','*','*','*','*','*','*','*','*','*'} };
 	char c = ' ';
@@ -246,7 +243,7 @@ int main()
 			postWalkersPlants = false;
 		}
 
-		system("CLS"); // clear screen
+		//system("CLS"); // clear screen
 		drawMaze(maze, numRows, numCols);
 		//cin >> c;
 		std::cout << "\nPress the RETURN key to continue OR 'x' to exit!" << std::endl;
